@@ -25,11 +25,11 @@ public class Appointment implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private int[] date;
 	private String time;
-	private String client;
 	private boolean status;
-	private Animal animal;	
+	private Animal animal;
+	private Owner client;
 	
-	public Appointment(String cli, Animal an) {
+	public Appointment(Owner cli, Animal an) {
 		client = cli;
 		animal = an;
 		status = true;
@@ -47,7 +47,7 @@ public class Appointment implements Serializable{
 		return date;
 	}
 
-	public String getOwner() {
+	public Owner getOwner() {
 		return client;
 	}
 	

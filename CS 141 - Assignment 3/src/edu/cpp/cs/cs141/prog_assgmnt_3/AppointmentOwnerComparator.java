@@ -21,8 +21,8 @@ public class AppointmentOwnerComparator implements Comparator<Appointment>{
 
 	@Override
 	public int compare(Appointment o1, Appointment o2) {
-		String owner1 = o1.getOwner().toUpperCase();
-		String owner2 = o2.getOwner().toUpperCase();
+		String owner1 = o1.getOwner().getName().toUpperCase();
+		String owner2 = o2.getOwner().getName().toUpperCase();
 		return owner1.compareTo(owner2);
 	}
 

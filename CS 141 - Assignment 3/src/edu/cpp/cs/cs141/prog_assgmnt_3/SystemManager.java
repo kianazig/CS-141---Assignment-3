@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 
 /**
@@ -176,16 +177,22 @@ public class SystemManager {
 			}
 		}
 		else if (choice == 2) {
-			addAppointment(animal);
+			int i = 0;
+			for (Owner cli : clients) {
+				if (animal.getOwner().equalsIgnoreCase(cli.getName()))
+					break;
+				else 
+					i++;
+			}
+			addAppointment(animal, clients.get(i));
 		}
 	}
 
-	private void addAppointment(Animal animal) {
-		Appointment app = new Appointment(animal.getOwner(), animal);
+	private void addAppointment(Animal animal, Owner client) {
+		Appointment app = new Appointment(client, animal);
 		app.setDate(ui.askAppointmentDate());
 		app.setTime(ui.askAppointmentTime());
 		appointments.add(app);
-//		System.out.println("APP ADDED TEST");//test
 	}
 
 	private void searchAppointments() {

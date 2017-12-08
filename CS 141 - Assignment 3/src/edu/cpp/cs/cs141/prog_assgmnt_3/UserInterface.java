@@ -125,7 +125,9 @@ public class UserInterface {
 		else
 			strStatus = "Resolved";
 		System.out.println("STATUS: "+strStatus+"\n");
-		System.out.println("CLIENT: "+app.getOwner()+"\n");
+		System.out.println("CLIENT: "+app.getOwner().getName());
+		System.out.println("PHONE NUMBER: "+app.getOwner().getPhoneNumber());
+		System.out.println("ADDRESS: "+app.getOwner().getAddress()+"\n");
 		switch (app.getDate()[0]) {
 		case 1:
 			strMonth = "January";
@@ -693,7 +695,7 @@ public class UserInterface {
 		System.out.println("----------------------------------------------------");
 		for (Appointment app: appointments) {
 			String date = app.getDate()[0]+"/"+app.getDate()[1]+"/"+app.getDate()[2];
-			System.out.printf(i+": %-20s%-15s%-20s\n", app.getOwner(), date, app.getAnimal().getName());
+			System.out.printf(i+": %-20s%-15s%-20s\n", app.getOwner().getName(), date, app.getAnimal().getName());
 			i++;
 		}
 	}
