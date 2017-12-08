@@ -41,7 +41,10 @@ public abstract class Animal implements Serializable{
 		owner = owner2;
 		name = name2;
 		age = age2;
+		vaccinations = new ArrayList<String>();
 		currentAppointments = new ArrayList<Appointment>();
+		currentDiseases = new ArrayList<String>();
+		pastDiseases = new ArrayList<String>();
 	}
 	
 	/**

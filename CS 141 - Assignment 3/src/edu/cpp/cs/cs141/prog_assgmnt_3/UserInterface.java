@@ -884,15 +884,20 @@ public class UserInterface {
 	 */
 	public int editMedicalHistory() {
 		System.out.println("Would you like to: ");
-		System.out.println("\n1: Change the Age\n2: Add A Vaccination\n3: Add A Current Disease\4: "
-				+ "Change the Status of a Disease from Current to Past");
+		System.out.println("\n1: Change the Age\n2: Add A Vaccination\n3: Add A Current Disease\n"
+				+ "4: Change the Status of a Disease from Current to Past");
 		while (true) {
 			try {
 				int choice = keyboard.nextInt();
 				if (choice<1 | choice>4)
 					System.out.println("Invalid Input. Please enter a number from 1-4.");
-				else
+				else if (choice == 2){
+					keyboard.nextLine();
 					return choice;
+				}
+				else {
+					return choice;
+				}
 			}
 			catch (InputMismatchException ex) {
 				System.out.println("Invalid Input. Please enter a number.");

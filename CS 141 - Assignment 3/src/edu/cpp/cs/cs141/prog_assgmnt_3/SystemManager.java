@@ -216,13 +216,19 @@ public class SystemManager {
 		}
 	}
 	
+	/**
+	 * Edits an animal's medical history based on the user's input
+	 * @param animal the animal that the history will be edited for
+	 */
 	public void editMedicalHistory(Animal animal) {
 		int input = ui.editMedicalHistory();
 		if (input == 1) {
 			animal.changeAge(ui.askAge());
 		}
 		else if (input == 2) {
-			animal.addVaccinations(ui.askVaccinationNames());
+			ArrayList<String> vac = new ArrayList<String>();
+			vac = ui.askVaccinationNames();
+			animal.addVaccinations(vac);
 		}
 		else if (input == 3) {
 			animal.addCurrentDisease(ui.askMedicalHistory(true));
