@@ -27,10 +27,24 @@ public class UserInterface {
 		keyboard = new Scanner(System.in);
 	}
 	
+	/**
+	 * Prints out a welcome message.
+	 */
 	public void printWelcomeMessage() {
 		System.out.println("Welcome!");
 	}
 	
+	/**
+	 * Prints a main menu with 5 different options. Asks the user which option
+	 * they would like to select and verifies the syntax of the input before 
+	 * returning it.
+	 * @return An integer representing the user's input
+	 * 1. Search Appointments
+	 * 2. Search Medical Records
+	 * 3. Add A New Client
+	 * 4. Add A New Animal
+	 * 5. Quit (doesn't exit the program)
+	 */
 	public int printMainMenu() {
 		int choice;
 		System.out.println("");
@@ -41,7 +55,7 @@ public class UserInterface {
 			try {
 				choice = keyboard.nextInt();
 				if (choice<1 || choice>5)
-					System.out.println("Invalid Input. Please enter a number from 1-6.");
+					System.out.println("Invalid Input. Please enter a number from 1-5.");
 				else
 					return choice;
 			}
@@ -52,7 +66,13 @@ public class UserInterface {
 		}
 	}
 	
-	//TESTED
+	/**
+	 * Asks the user whether they would like to search appointments by owner or
+	 * by date and verifies the syntax of the input before returning it. 
+	 * @return An integer representing the user's input
+	 * 1. Owner
+	 * 2. Date
+	 */
 	public boolean askAppointmentSearchType() {
 		System.out.println("Would You Like To Search By:\n1: Owner\n2: Date");
 		while (true) {
@@ -73,13 +93,21 @@ public class UserInterface {
 
 	}
 	
-	//TESTED
+	/**
+	 * Asks the user whether they would like to search medical records by animal name,
+	 * owner name, or animal type and verifies the syntax of the input before returning it. 
+	 * Animal type will show them only appointments for a specific type of animal.
+	 * @return An integer representing the user's input
+	 * 1. Animal Name
+	 * 2. Owner
+	 * 3. Animal Type
+	 */
 	public int askMedicalRecordSearchType() {
 		System.out.println("Would You Like To Search By:\n1: Animal Name"
 				+ "\n2: Owner\n3: Animal Type");
 		while (true) {
-			int choice = keyboard.nextInt();
 			try {
+				int choice = keyboard.nextInt();
 				if (choice==1)
 					return 1;
 				else if (choice==2)
@@ -115,7 +143,11 @@ public class UserInterface {
 		}
 	}
 	
-	//TESTED
+	/**
+	 * Prints out the details of one specific appointment, including status, client information,
+	 * animal information, and the date and time of the appointment. 
+	 * @param app The appointment that is printed out. 
+	 */
 	public void printAppointmentDetails(Appointment app) {
 		System.out.println("\n--------------------------------------------------");
 		String strStatus;
@@ -126,8 +158,11 @@ public class UserInterface {
 			strStatus = "Resolved";
 		System.out.println("STATUS: "+strStatus+"\n");
 		System.out.println("CLIENT: "+app.getOwner().getName());
-		System.out.println("PHONE NUMBER: "+app.getOwner().getPhoneNumber());
-		System.out.println("ADDRESS: "+app.getOwner().getAddress()+"\n");
+		String phoneNum = "("+app.getOwner().getPhoneNumber().substring(0, 3)+")"+app.getOwner().getPhoneNumber().substring(3, 6)+
+				"-"+app.getOwner().getPhoneNumber().substring(6, 10);
+		System.out.println("PHONE NUMBER: "+phoneNum);
+		String[] address = app.getOwner().getAddress().split("\\r?\\n");
+		System.out.printf("%9s%9s\n%9s%9s\n\n", "ADDRESS: ", address[0], "", address[1]);
 		switch (app.getDate()[0]) {
 		case 1:
 			strMonth = "January";
@@ -175,14 +210,27 @@ public class UserInterface {
 		System.out.println("--------------------------------------------------\n");
 	}
 	
+	/**
+	 * Prints out a message saying that an animal currently has no outstanding appointments.
+	 */
 	public void printNoAppointments() {
 		System.out.println("\nThis animal has no outstanding appointments.");
 	}
 	
+	/**
+	 * Prints out a message informing the user that their appointment was added successfully. 
+	 */
 	public void printAppointmentAdded() {
 		System.out.println("Your appointment was successfully added.");
 	}
 	
+	/**
+	 * Asks the user whether they would like to edit the appointment they are looking at or
+	 * return to the main menu and verifies the syntax of the input before returning it. 
+	 * @return An integer representing the user's input
+	 * 1. Edit the Appointment
+	 * 2. Return to Main Menu
+	 */
 	public int appointmentOptions() {
 		int choice;
 		System.out.println("Would you like to:\n1: Edit this appointment\n"
@@ -202,7 +250,14 @@ public class UserInterface {
 		}
 	}
 	
-	//TESTED
+	/**
+	 * Asks the user which attribute of the appointment they would like to change and 
+	 * verifies the syntax of the input before returning it. 
+	 * @return An integer representing the user's input
+	 * 1. Change the Date
+	 * 2. Change the Time
+	 * 3. Change the Status
+	 */
 	public int editAppointment() {
 		int choice=0;
 		boolean validInput = false;
@@ -229,7 +284,14 @@ public class UserInterface {
 		return choice;
 	}
 	
-	//TESTED
+	/**
+	 * Prints out a message informing the user their appointment was successfully edited, then 
+	 * asks if the user would like to return to the appointment details or to the main menu and 
+	 * verifies the syntax of the input before returning it.
+	 * @return An integer representing the user's input
+	 * 0: Main Menu
+	 * 1: Appointment Details
+	 */
 	public int printAppointmentEdited() {
 		System.out.println("\nAppoitment succesfully edited. To return to the main menu enter 0."
 				+ "\nTo return to the appointment details, enter 1.");
@@ -249,11 +311,19 @@ public class UserInterface {
 
 	}
 	
+	/**
+	 * Prints a message informing the user that their appointment was removed and that 
+	 * the program will return to the Main Menu.
+	 */
 	public void printAppointmentRemoved() {
 		System.out.println("\nAppointment successfully removed. Returning to Main Menu.");
 	}
 	
-	//TESTED
+	/**
+	 * Calls three methods, one to ask the date, month, and year of the appointment.
+	 * @return An integer array of size 3. The first element represents the month, the second
+	 * element represents the day, and the third element represents the year. 
+	 */
 	public int[] askAppointmentDate() {
 		int[] date = new int[3];
 		date[0] = askMonth();
@@ -262,7 +332,13 @@ public class UserInterface {
 		return date;
 	}
 
-	//TESTED
+	/**
+	 * Asks the user which month they would like to make the appointment for, and verifies the 
+	 * syntax of the input before returning it. Allows for multiple different formats to be inputed, 
+	 * the entire month name, the abbreviation without a period, the abbreviation with a period, the
+	 * month number, or the month number with a 0 in front of it, if it is a single digit number. 
+	 * @return An integer representing the month of the appointment. (1-12 to represent January-December)
+	 */
 	private int askMonth() {
 		String month;
 		System.out.print("Month: ");
@@ -309,8 +385,14 @@ public class UserInterface {
 			}
 		}
 	}
-
-	//TESTED
+	
+	/**
+	 * Asks the user what day of the month they want to make their appointment for and verifies the 
+	 * syntax of the input before returning it. Ensures that the date they entered exists in the month
+	 * they have chosen. 
+	 * @param month the month that the appointment is in
+	 * @return An integer representing the day of the appointment
+	 */
 	private int askDay(int month) {
 		int day;
 		while (true){
@@ -333,7 +415,11 @@ public class UserInterface {
 		}
 	}
 	
-	//TESTED
+	/**
+	 * Asks the user what year they want to make the appointment for and verifies the syntax of 
+	 * the input before returning it. Doesn't allow the user to input a year before 2017 or after 3000.
+	 * @return An integer representing the year of the appointment 
+	 */
 	private int askYear() {
 		int year;
 		while (true) {
@@ -352,6 +438,11 @@ public class UserInterface {
 		}
 	}
 	
+	/**
+	 * Asks the user what time they want to make the appointment for and verifies the syntax of the
+	 * input before returning it.
+	 * @return A String representing the time of the appointment. 
+	 */
 	public String askAppointmentTime() {
 		String time;
 		System.out.print("Time: ");
@@ -396,7 +487,11 @@ public class UserInterface {
 		}
 	}
 	
-	//TESTED
+	/**
+	 * Asks the user what type of animal they are entering (Dog/Bird/Fish) and verifies the
+	 * syntax of the input before returning it. 
+	 * @return A String representing the species of the animal
+	 */
 	public String askAnimalType() {
 		String type;
 		System.out.print("Type Of Animal: ");
@@ -414,7 +509,13 @@ public class UserInterface {
 		}
 	}
 	
-	//TESTED
+	/**
+	 * Asks the user what specific variety of the species this animal is and verifies the 
+	 * syntax of the input before returning it.
+	 * @param type The species of the animal (Dog/Bird/Fish)
+	 * @param subtypeOption The options for the varieties of the given species
+	 * @return A string representing the subtype of the animal (specific to their species)
+	 */
 	public String askAnimalSubtype(String type, String[] subtypeOption) {
 		String subtype="";
 		boolean validInput = false;
@@ -441,7 +542,11 @@ public class UserInterface {
 		return subtype;
 	}
 	
-	//TESTED
+	/**
+	 * Asks the user the name of the owner of the animal and returns their input.
+	 * @param clear if true, clears the scanner
+	 * @return A string representing the name of the owner
+	 */
 	public String askOwnerName(boolean clear) {
 		System.out.print("Owner: ");
 		if (clear)
@@ -449,25 +554,35 @@ public class UserInterface {
 		return keyboard.nextLine();
 	}
 	
-	//TESTED
+	/**
+	 * Prints a message informing the user that the owner they entered doesn't exist
+	 * in the system
+	 */
 	public void printInvalidOwner() {
 		System.out.println("This owner doesn't exist in the system. Please try again.");
 	}
 	
-	//TESTED
+	/**
+	 * Asks the user the name of the animal and returns their input
+	 * @return A String representing the name of the animal
+	 */
 	public String askAnimalName() {
 		System.out.print("Name: ");
 		return keyboard.nextLine();
 	}
 	
-	//TESTED
+	/**
+	 * Asks the user the age of the animal and verifies the syntax of their input before 
+	 * returning it.
+	 * @return An integer representing the age of the animal 
+	 */
 	public int askAge() {
 		int age;
 		while (true) {
 			System.out.print("Age: ");
 			try {
 				age = keyboard.nextInt();
-				if (age<1)
+				if (age<0)
 					System.out.println("Invalid Age.");
 				else
 					return age;
@@ -479,14 +594,21 @@ public class UserInterface {
 		}
 	}
 	
-	//TESTED
+	/**
+	 * Asks the user the name of the client they are entering and returns their input
+	 * @return A String representing the name of the client
+	 */
 	public String askClientName() {
 		System.out.print("\nName: ");
 		keyboard.nextLine();
 		return keyboard.nextLine();
 	}
 	
-	//TESTED
+	/**
+	 * Asks the user their address information and verifies the syntax of some of their
+	 * input (the zip code) before returning it. 
+	 * @return A String formatted properly to represent the client's address
+	 */
 	public String askAddress() {
 		String address;
 		boolean validInput = false;
@@ -517,7 +639,11 @@ public class UserInterface {
 		return address;
 	}
 	
-	//TESTED
+	/**
+	 * Asks the user for the client's phone number and verifies the syntax of the input before 
+	 * returning it (must be 10 digits with no special characters).
+	 * @return A String representing the client's phone number
+	 */
 	public String askPhoneNumber() {
 		String phoneNumber="";
 		boolean validInput = false;
@@ -545,7 +671,11 @@ public class UserInterface {
 		return phoneNumber;
 	}
 	
-	//TESTED
+	/**
+	 * Tells the user that to enter a new client/animal, they must give the following
+	 * information.
+	 * @param client if true, prompt for client, if false, prompt for animal
+	 */
 	public void printAdd(boolean client) {
 		String str;
 		if (client)
@@ -555,7 +685,12 @@ public class UserInterface {
 		System.out.println("\nTo add a new "+str+", please fill out the following information.");
 	}
 	
-	//TESTED
+	/**
+	 * Asks the user if they would like to enter a history for this animal and verifies the syntax
+	 * of their input before returning it (Can enter Yes, Y, No, or N. Not case sensitive).
+	 * @param type the type of history the user is asked about
+	 * @return true if the user would like to enter the history, false if they would not
+	 */
 	public boolean addHistory(String type) {
 		System.out.println("Would you like to add a "+type+" history?");
 		while(true) {
@@ -569,7 +704,11 @@ public class UserInterface {
 		}
 	}
 	
-	//TESTED
+	/**
+	 * Asks the user to enter a vaccination and if they would like to keep entering 
+	 * vaccinations they may choose to do so. 
+	 * @return
+	 */
 	public ArrayList<String> askVaccinationNames() {
 		ArrayList<String> vaccinations = new ArrayList<String>();
 		while (true) {
@@ -592,7 +731,36 @@ public class UserInterface {
 		}
 	}
 	
-	//TESTED
+	/**
+	 * Asks the user if they would like to enter any current/past diseases and verifies
+	 * the syntax of their input before returning it. 
+	 * @param current if true, prompts for current diseases, if false, prompts for past diseases
+	 * @return true if the user would like to enter diseases, false if they would not
+	 */
+	public boolean addDiseases(boolean current) {
+		String status;
+		if (current)
+			status = "Current";
+		else
+			status = "Past";
+		System.out.println("Would You Like To Add Any "+status+" Diseases?");
+		while(true) {
+			String choice = keyboard.nextLine();
+			if (choice.equalsIgnoreCase("Yes")||choice.equalsIgnoreCase("Y"))
+				return true;
+			else if (choice.equalsIgnoreCase("No")||choice.equalsIgnoreCase("N"))
+				return false;
+			else 
+				System.out.println("Invalid Input. Please Enter Yes or No.");
+		}
+	}
+	
+	/**
+	 * Asks the user for the name of the disease and continues to do so until the user chooses
+	 * to no longer add any more diseases
+	 * @param current if true, prompts for current diseases, if false prompts for past diseases
+	 * @return ArrayList<String> representing the diseases the user input
+	 */
 	public ArrayList<String> askMedicalHistory(boolean current) {
 		String status;
 		ArrayList<String> diseases = new ArrayList<String>();
@@ -621,7 +789,11 @@ public class UserInterface {
 		}
 	}
 
-	//TESTED
+	/**
+	 * Prints out a numbered list of all medical records, categorized by animal name, type, 
+	 * or owner.
+	 * @param animals The list of animals to print medical records for
+	 */
 	public void printMedicalHistory(ArrayList<Animal> animals) {
 		int i=1;
 		System.out.printf("\n   %-20S%-15S%-20S\n", "Animal Name", "Type", "Owner");
@@ -630,10 +802,13 @@ public class UserInterface {
 			System.out.printf(i+": %-20s%-15s%-20s\n", animal.getName(), animal.getType(), animal.getOwner());
 			i++;
 		}
-		System.out.println("\n");
 	}
 	
-	//TESTED
+	/**
+	 * Prints the medical record for one specific animal, telling their name, age, species, subtype,
+	 * medical history, vaccination history, and owner. 
+	 * @param animal
+	 */
 	public void printSpecificMedicalHistory(Animal animal) {
 		System.out.println("\n-------------------------------------------------------");
 		System.out.println("ANIMAL NAME: "+animal.getName()+"\nAGE: "+animal.getAge());
@@ -669,15 +844,25 @@ public class UserInterface {
 		System.out.println("-------------------------------------------------------");
 	}
 	
-	//TESTED
+	/**
+	 * When on the medical record screen of a particular animal, asks the user if they would like to go back 
+	 * to the main menu, check this animal's appointments, add an appointment for the animal, or edit the
+	 * animal's medical history and verifies the syntax of the input before returning it. 
+	 * @return An integer representing the user's input.
+	 * 0: Main Menu
+	 * 1: Check Appointments
+	 * 2: Add Appointments
+	 * 3: Edit Medical History 
+	 */
 	public int askCheckOrAddApp() {
 		System.out.println("Would you like to: ");
-		System.out.println("\n0: Go Back To The Main Menu\n1: Check This Animal's Appointments\n2: Add An Appointment For This Animal");
+		System.out.println("\n0: Go Back To The Main Menu\n1: Check This Animal's Appointments\n2: Add An Appointment For This Animal"
+				+ "\n3: Edit This Animal's Medical History");
 		while (true) {
 			try {
 				int choice = keyboard.nextInt();
-				if (choice<0 | choice >2)
-					System.out.println("Invalid Input. Please enter a number from 0-2.");
+				if (choice<0 | choice >3)
+					System.out.println("Invalid Input. Please enter a number from 0-3.");
 				else
 					return choice;
 			}
@@ -687,8 +872,63 @@ public class UserInterface {
 			}
 		}
 	}
+	
+	/**
+	 * Asks the user which aspect of the medical history they would like to edit and validates the syntax of the
+	 * input before returning it.
+	 * @return An integer representing which aspect of the medical history the user would like to change
+	 * 1: Age
+	 * 2: Add a Vaccination
+	 * 3: Add a Current Disease
+	 * 4: Change a Disease from Current to Past
+	 */
+	public int editMedicalHistory() {
+		System.out.println("Would you like to: ");
+		System.out.println("\n1: Change the Age\n2: Add A Vaccination\n3: Add A Current Disease\4: "
+				+ "Change the Status of a Disease from Current to Past");
+		while (true) {
+			try {
+				int choice = keyboard.nextInt();
+				if (choice<1 | choice>4)
+					System.out.println("Invalid Input. Please enter a number from 1-4.");
+				else
+					return choice;
+			}
+			catch (InputMismatchException ex) {
+				System.out.println("Invalid Input. Please enter a number.");
+				keyboard.nextLine();
+			}
+		}
+	}
+	
+	public String printCurrentDiseases(Animal animal) {
+		int i = 1;
+		System.out.println("Current Diseases: ");
+		for (String dis : animal.getCurrentDiseases()) {
+			System.out.print(i+": "+dis);
+			i++;
+		}
+		System.out.println("Enter the number of the disease you would like to change from current to past.");
+		while (true) {
+			try {
+				int choice = keyboard.nextInt();
+				if (choice<1 | choice>i) {
+					System.out.println("Invalid Input. Please enter a number from 1-"+i+".");
+				}
+				else
+					return animal.getCurrentDiseases().get(choice-1);
+			}
+			catch (InputMismatchException ex) {
+				System.out.println("Invalid Input. Please enter a number.");
+				keyboard.nextLine();
+			}
+		}
+	}
 
-	//TESTED I THINK
+	/**
+	 * Prints out a numbered list of all outstanding appointments, categorized by date or owner. 
+	 * @param appointments The list of appointments to be printed
+	 */
 	public void printAppointments(ArrayList<Appointment> appointments) {
 		int i=1;
 		System.out.printf("\n   %-20S%-15S%-20S\n", "Owner", "Date", "Animal Name");
@@ -700,7 +940,14 @@ public class UserInterface {
 		}
 	}
 
-	//NEEDS TESTING
+	/**
+	 * Asks the user if they would like to return to the main menu or view the specific details of an appointment/
+	 * an animal's medical record and verifies the syntax of the input before returning it.
+	 * @param appointment if true, prompts the user for appointments, if false, prompts the user for medical records
+	 * @param numberOfOptions the size of the list the user has to choose from
+	 * @return An integer representing the user's input (Either 0 for the main menu or the number of the list item
+	 * they would like to view the details of)
+	 */
 	public int viewSpecific(boolean appointment, int numberOfOptions) {
 		System.out.println("\nTo go back to the Main Menu, Enter 0.");
 		if (appointment) {

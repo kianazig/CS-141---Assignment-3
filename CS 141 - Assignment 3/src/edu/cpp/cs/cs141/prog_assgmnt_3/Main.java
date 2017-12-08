@@ -14,10 +14,11 @@ package edu.cpp.cs.cs141.prog_assgmnt_3;
 public class Main {
 
 	/**
+	 * Main Method. Creates a SystemManager object and starts the program. 
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		SystemManager sysManage = new SystemManager();//KEEP
-		sysManage.runProgram();//KEEP
+		SystemManager sysManage = new SystemManager();
+		sysManage.runProgram();
 	}
 }

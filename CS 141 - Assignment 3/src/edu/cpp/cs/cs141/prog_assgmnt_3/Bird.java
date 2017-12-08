@@ -25,6 +25,12 @@ public class Bird extends Animal{
 	public static enum Type{PARAKEET, COCKATIEL, CONURE, PARROT, OTHER};
 	private Type type;
 	
+	/**
+	 * Creates a Bird, calling the superclass constructor
+	 * @param owner the owner's name
+	 * @param name the bird's name
+	 * @param age the bird's age
+	 */
 	public Bird(String owner, String name, int age) {
 		super(owner, name, age);
 	}

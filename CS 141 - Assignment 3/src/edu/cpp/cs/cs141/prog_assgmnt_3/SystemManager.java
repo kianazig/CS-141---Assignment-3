@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 
 /**
@@ -56,9 +55,12 @@ public class SystemManager {
 		appointments = new ArrayList<Appointment>();//NOT SURE IF NEEDED BECUASE CLIENTS HAVE AN APP OBJECT
 	}
 	
+	/**
+	 * Saves the size of the ArrayList followed by all of the objects inside it, for clients,
+	 * animals, and appointments.
+	 */
 	public void saveData() {
 		File save = new File("save.dat");
-		
 		try {
 			fos = new FileOutputStream(save);
 			oos = new ObjectOutputStream(fos);
@@ -75,11 +77,15 @@ public class SystemManager {
 				oos.writeObject(app);
 			}
 			oos.close();
-		} catch (IOException e) {
+		} 
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * Reads off client, animal, and appointment objects, adding them to the appropriate ArrayLists
+	 */
 	public void loadData() {
 		File save = new File("save.dat");
 		try {
@@ -97,11 +103,16 @@ public class SystemManager {
 			for (int i=0; i<numberOfAppointments; i++) {
 				appointments.add((Appointment) ois.readObject());
 			}
+			ois.close();
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		} 
 	}
 	
+	/**
+	 * Main loop that runs the program, directing different methods to execute based on 
+	 * what the user wants to do. 
+	 */
 	public void runProgram() {
 		ui.printWelcomeMessage();
 		loadData();
@@ -134,7 +145,11 @@ public class SystemManager {
 		}
 	}
 	
-	//TESTED
+	/**
+	 * Calls the UI to ask which aspects of the appointment the user wants to change, and then 
+	 * changes them appropriately. 
+	 * @param app the appointment that's being edited
+	 */
 	public void editAppointment(int app) {
 		int choice = 1;
 		while (choice == 1) {
@@ -152,6 +167,13 @@ public class SystemManager {
 				}
 				else if (editChoice == 3) {
 					appointments.remove(appointments.get(app-1));
+					for (Animal an : animals) {
+						for (Appointment appoint : an.getAppointments()) {
+							if (appoint.equals(appointments.get(app-1))){
+								an.removeAppointment(appoint);
+							}
+						}
+					}
 					ui.printAppointmentRemoved();
 					choice = 0;
 				}
@@ -162,17 +184,20 @@ public class SystemManager {
 	}
 
 
+	/**
+	 * Allows the user to either view existing appointments or add an appointment for a 
+	 * particular animal
+	 * @param animal the animal that appointments are being viewed/added for 
+	 */
 	private void editOrViewAppointment(Animal animal) {
 		int choice = ui.askCheckOrAddApp();
-		boolean hasAppointments = false;
 		if (choice == 1) {
-			for (Appointment app : appointments) {
-				if (app.getAnimal().equals(animal)) {
+			if (!animal.getAppointments().isEmpty()) {
+				for (Appointment app : animal.getAppointments()) {
 					ui.printAppointmentDetails(app);
-					hasAppointments = true;
 				}
 			}
-			if (!hasAppointments) {
+			else {
 				ui.printNoAppointments();
 			}
 		}
@@ -186,15 +211,49 @@ public class SystemManager {
 			}
 			addAppointment(animal, clients.get(i));
 		}
+		else if (choice == 3) {
+			editMedicalHistory(animal);
+		}
+	}
+	
+	public void editMedicalHistory(Animal animal) {
+		int input = ui.editMedicalHistory();
+		if (input == 1) {
+			animal.changeAge(ui.askAge());
+		}
+		else if (input == 2) {
+			animal.addVaccinations(ui.askVaccinationNames());
+		}
+		else if (input == 3) {
+			animal.addCurrentDisease(ui.askMedicalHistory(true));
+		}
+		else if (input == 4) {
+			for (String dis : animal.getCurrentDiseases()) {
+				if (dis.equalsIgnoreCase(ui.printCurrentDiseases(animal))) {
+					animal.changeDiseaseToPast(dis);
+				}
+			}
+		}
 	}
 
+	/**
+	 * Asks the UI for the user's desired appointment details and adds the appointment
+	 * to the ArrayList
+	 * @param animal the animal the appointment is being added for
+	 * @param client the client the appointment is being added for
+	 */
 	private void addAppointment(Animal animal, Owner client) {
 		Appointment app = new Appointment(client, animal);
 		app.setDate(ui.askAppointmentDate());
 		app.setTime(ui.askAppointmentTime());
+		animal.addAppointment(app);//Just Added, Needs testing
 		appointments.add(app);
 	}
 
+	/**
+	 * Tells the UI to print all appointments either sorted by owner or by date based on 
+	 * the user's input
+	 */
 	private void searchAppointments() {
 		boolean searchByOwner = ui.askAppointmentSearchType();
 		if (searchByOwner) {
@@ -208,6 +267,10 @@ public class SystemManager {
 		ui.printAppointments(appointments);
 	}
 
+	/**
+	 * Calls the UI to print a list of medical records based on the user's chosen search criteria
+	 * @return the animal that the user would like to see the specific details of 
+	 */
 	private Animal searchMedicalRecords() {
 		int searchType = ui.askMedicalRecordSearchType();
 		ArrayList<Animal> dogs = new ArrayList<Animal>();
@@ -270,6 +333,9 @@ public class SystemManager {
 		return null;
 	}
 
+	/**
+	 * Asks the UI for client information and adds a new Client to the ArrayList
+	 */
 	private void addClient() {
 		ui.printAdd(true);
 		String name = ui.askClientName();
@@ -279,6 +345,9 @@ public class SystemManager {
 		clients.add(client);
 	}
 
+	/**
+	 * Asks the UI for animal information and adds a new Animal to the ArrayList
+	 */
 	private void addAnimal() {
 		boolean validOwner = false;
 		String owner="";
@@ -319,10 +388,14 @@ public class SystemManager {
 			animals.get(size-1).setVaccinations(vaccinations);
 		}
 		if (ui.addHistory("medical")) {
-			currentDiseases = ui.askMedicalHistory(true);
-			pastDiseases = ui.askMedicalHistory(false);
-			animals.get(size-1).setCurrentDiseases(currentDiseases);
-			animals.get(size-1).setPastDiseases(pastDiseases);
+			if (ui.addDiseases(true)) {
+				currentDiseases = ui.askMedicalHistory(true);
+				animals.get(size-1).setCurrentDiseases(currentDiseases);
+			}
+			if (ui.addDiseases(false)) {
+				pastDiseases = ui.askMedicalHistory(false);
+				animals.get(size-1).setPastDiseases(pastDiseases);
+			}
 		}
 	}
 }
