@@ -796,10 +796,13 @@ public class UserInterface {
 	 */
 	public void printMedicalHistory(ArrayList<Animal> animals) {
 		int i=1;
-		System.out.printf("\n   %-20S%-15S%-20S\n", "Animal Name", "Type", "Owner");
+		System.out.printf("\n    %-20S%-15S%-20S\n", "Animal Name", "Type", "Owner");
 		System.out.println("-------------------------------------------------------");
 		for (Animal animal: animals) {
-			System.out.printf(i+": %-20s%-15s%-20s\n", animal.getName(), animal.getType(), animal.getOwner());
+			if (i<10)
+				System.out.printf(" "+i+": %-20s%-15s%-20s\n", animal.getName(), animal.getType(), animal.getOwner());
+			else 
+				System.out.printf(i+": %-20s%-15s%-20s\n", animal.getName(), animal.getType(), animal.getOwner());
 			i++;
 		}
 	}
@@ -815,7 +818,7 @@ public class UserInterface {
 		System.out.println("\nSPECIES: "+animal.getType()+"\nTYPE: "+animal.getSubtype());
 		System.out.println("\nOWNER: "+animal.getOwner());
 		System.out.println("\nVACCINATION HISTORY");
-		if (animal.getVaccinations()==null) {
+		if (animal.getVaccinations().isEmpty()) {
 			System.out.println("This animal has no vaccination history.");
 		}
 		else {
@@ -824,7 +827,7 @@ public class UserInterface {
 			}
 		}
 		System.out.println("\nCURRENT DISEASES");
-		if (animal.getCurrentDiseases()==null){
+		if (animal.getCurrentDiseases().isEmpty()){
 			System.out.println("This animal has no current diseases.");
 		}
 		else {
@@ -833,7 +836,7 @@ public class UserInterface {
 			}
 		}
 		System.out.println("\nPAST DISEASES");
-		if (animal.getPastDiseases()==null) {
+		if (animal.getPastDiseases().isEmpty()) {
 			System.out.println("This animal has no past diseases.");
 		}
 		else {
@@ -891,11 +894,8 @@ public class UserInterface {
 				int choice = keyboard.nextInt();
 				if (choice<1 | choice>4)
 					System.out.println("Invalid Input. Please enter a number from 1-4.");
-				else if (choice == 2){
-					keyboard.nextLine();
-					return choice;
-				}
 				else {
+					keyboard.nextLine();
 					return choice;
 				}
 			}
@@ -906,19 +906,25 @@ public class UserInterface {
 		}
 	}
 	
+	/**
+	 * Prints out a numbered list of all of an animal's current diseases and asks the user which
+	 * disease they would like to change the status of and verifies the input before returning it
+	 * @param animal the animal that the diseases will be printed for
+	 * @return the disease that should be changed from current to past
+	 */
 	public String printCurrentDiseases(Animal animal) {
 		int i = 1;
 		System.out.println("Current Diseases: ");
 		for (String dis : animal.getCurrentDiseases()) {
-			System.out.print(i+": "+dis);
+			System.out.println(i+": "+dis);
 			i++;
 		}
 		System.out.println("Enter the number of the disease you would like to change from current to past.");
 		while (true) {
 			try {
 				int choice = keyboard.nextInt();
-				if (choice<1 | choice>i) {
-					System.out.println("Invalid Input. Please enter a number from 1-"+i+".");
+				if (choice<1 | choice>(i-1)) {
+					System.out.println("Invalid Input. Please enter a number from 1-"+(i-1)+".");
 				}
 				else
 					return animal.getCurrentDiseases().get(choice-1);
@@ -936,11 +942,14 @@ public class UserInterface {
 	 */
 	public void printAppointments(ArrayList<Appointment> appointments) {
 		int i=1;
-		System.out.printf("\n   %-20S%-15S%-20S\n", "Owner", "Date", "Animal Name");
+		System.out.printf("\n    %-20S%-15S%-20S\n", "Owner", "Date", "Animal Name");
 		System.out.println("----------------------------------------------------");
 		for (Appointment app: appointments) {
 			String date = app.getDate()[0]+"/"+app.getDate()[1]+"/"+app.getDate()[2];
-			System.out.printf(i+": %-20s%-15s%-20s\n", app.getOwner().getName(), date, app.getAnimal().getName());
+			if (i<10)
+				System.out.printf(" "+i+": %-20s%-15s%-20s\n", app.getOwner().getName(), date, app.getAnimal().getName());
+			else
+				System.out.printf(i+": %-20s%-15s%-20s\n", app.getOwner().getName(), date, app.getAnimal().getName());
 			i++;
 		}
 	}

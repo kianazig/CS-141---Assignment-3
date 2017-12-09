@@ -26,7 +26,6 @@ import java.util.Comparator;
  */
 public class SystemManager {
 	
-	
 	private UserInterface ui;
 	private Comparator<Animal> animalNameComp;
 	private Comparator<Animal> animalOwnerComp;
@@ -234,11 +233,8 @@ public class SystemManager {
 			animal.addCurrentDisease(ui.askMedicalHistory(true));
 		}
 		else if (input == 4) {
-			for (String dis : animal.getCurrentDiseases()) {
-				if (dis.equalsIgnoreCase(ui.printCurrentDiseases(animal))) {
-					animal.changeDiseaseToPast(dis);
-				}
-			}
+			String disease = ui.printCurrentDiseases(animal);
+			animal.changeDiseaseToPast(disease);
 		}
 	}
 
